@@ -1,0 +1,5 @@
+bucket         = "replace-with-private-tf-state-bucket"
+key            = "basalt-platform/dev/terraform.tfstate"
+region         = "us-east-1"
+encrypt        = true
+dynamodb_table = "replace-with-tf-state-lock-table"

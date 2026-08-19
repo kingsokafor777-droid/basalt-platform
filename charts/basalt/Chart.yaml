@@ -1,0 +1,12 @@
+apiVersion: v2
+name: basalt
+description: Security posture dashboard and pipeline workload chart for the Basalt platform
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - security
+  - posture-management
+  - platform
+maintainers:
+  - name: Kingsley Okafor

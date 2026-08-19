@@ -1,0 +1,9 @@
+region               = "us-east-1"
+vpc_cidr             = "10.42.0.0/16"
+availability_zones   = ["us-east-1a", "us-east-1b"]
+artifact_bucket_name = "replace-with-globally-unique-basalt-artifacts"
+kubernetes_version   = "1.30"
+node_instance_types  = ["m6i.large"]
+
+# Bind this to a protected GitHub Environment subject, not a broad repository wildcard.
+github_subjects = ["repo:kingsokafor777-droid/basalt-platform:environment:production"]

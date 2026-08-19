@@ -1,0 +1,40 @@
+name: Release Basalt Platform
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type DEPLOY to authorize the protected-environment Helm release"
+        required: true
+        type: string
+      dashboard_image_tag:
+        description: "Immutable dashboard image tag or digest"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    if: inputs.confirm == 'DEPLOY'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+        with:
+          version: "3.16.3"
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_PLATFORM_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - run: aws eks update-kubeconfig --name "${{ vars.EKS_CLUSTER_NAME }}" --region "${{ vars.AWS_REGION }}"
+      - run: >-
+          helm upgrade --install basalt charts/basalt --namespace basalt --create-namespace
+          --set dashboard.image.tag="${{ inputs.dashboard_image_tag }}"
+          --set dashboard.env.warehouseReadApiUrl="${{ vars.WAREHOUSE_READ_API_URL }}"
+          --set dashboard.env.artifactBucket="${{ vars.ARTIFACT_BUCKET }}"
+          --set serviceAccount.annotations.eks\.amazonaws\.com/role-arn="${{ vars.BASALT_IRSA_ROLE_ARN }}"
+          --wait --timeout 5m

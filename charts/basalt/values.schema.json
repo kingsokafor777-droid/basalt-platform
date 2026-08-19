@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Basalt Helm values",
+  "type": "object",
+  "properties": {
+    "dashboard": {
+      "type": "object",
+      "properties": {
+        "replicaCount": { "type": "integer", "minimum": 1 },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string", "minLength": 1 },
+            "tag": { "type": "string", "minLength": 1, "not": { "const": "latest" } }
+          },
+          "required": ["repository", "tag"]
+        },
+        "containerPort": { "type": "integer", "minimum": 1, "maximum": 65535 }
+      },
+      "required": ["replicaCount", "image", "containerPort"]
+    },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": { "type": "boolean" },
+        "annotations": { "type": "object", "additionalProperties": { "type": "string" } }
+      },
+      "required": ["create"]
+    },
+    "ingress": {
+      "type": "object",
+      "properties": { "enabled": { "type": "boolean" } },
+      "required": ["enabled"]
+    }
+  },
+  "required": ["dashboard", "serviceAccount", "ingress"]
+}

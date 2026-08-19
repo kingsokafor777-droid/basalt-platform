@@ -1,0 +1,64 @@
+{{- range $name, $job := dict "warehouse" .Values.warehouse "rag" .Values.rag }}
+{{- if $job.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "basalt.fullname" $ }}-{{ $name }}
+  labels:
+    {{- include "basalt.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+spec:
+  schedule: {{ $job.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            {{- include "basalt.labels" $ | nindent 12 }}
+            app.kubernetes.io/component: {{ $name }}
+        spec:
+          restartPolicy: Never
+          serviceAccountName: {{ include "basalt.serviceAccountName" $ }}
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: {{ $name }}
+              image: "{{ $job.image.repository }}:{{ $job.image.tag }}"
+              imagePullPolicy: {{ $job.image.pullPolicy }}
+              {{- with $job.command }}
+              command:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              {{- with $job.args }}
+              args:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              envFrom:
+                - configMapRef:
+                    name: {{ include "basalt.fullname" $ }}-runtime
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+              resources:
+                {{- toYaml $job.resources | nindent 16 }}
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: tmp
+              emptyDir:
+                sizeLimit: 128Mi
+{{- end }}
+{{- end }}
