@@ -9,4 +9,4 @@
 - [x] Add architecture diagrams, interface contracts, security controls, contribution guidance, and release documentation.
 - [x] Validate Terraform formatting and static checks, Helm rendering and linting, workflow syntax, documentation links, and repository hygiene.
 - [x] Build a reproducible local validation command surface and CI quality gates.
-- [ ] Commit and push basalt-platform to GitHub.
+- [x] Commit and push basalt-platform to GitHub.
