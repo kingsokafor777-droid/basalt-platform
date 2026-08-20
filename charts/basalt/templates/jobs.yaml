@@ -33,7 +33,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: {{ $name }}
-              image: "{{ $job.image.repository }}:{{ $job.image.tag }}"
+              image: "{{ $job.image.repository }}{{ if $job.image.digest }}@{{ $job.image.digest }}{{ else }}:{{ $job.image.tag }}{{ end }}"
               imagePullPolicy: {{ $job.image.pullPolicy }}
               {{- with $job.command }}
               command:

@@ -1,0 +1,19 @@
+# Copy to a protected deployment location only after the manually gated GHCR release
+# workflow has published, scanned, attested, and keylessly signed each image.
+# Do not deploy tags in production: every digest below must be a verified sha256 digest.
+dashboard:
+  image:
+    repository: ghcr.io/kingsokafor777-droid/basalt-dashboard
+    digest: "sha256:REPLACE_WITH_APPROVED_PUBLISHED_DIGEST"
+  env:
+    warehouseReadApiUrl: "https://REPLACE_WITH_PRIVATE_WAREHOUSE_READ_ENDPOINT"
+
+warehouse:
+  image:
+    repository: ghcr.io/kingsokafor777-droid/basalt-warehouse
+    digest: "sha256:REPLACE_WITH_APPROVED_PUBLISHED_DIGEST"
+
+rag:
+  image:
+    repository: ghcr.io/kingsokafor777-droid/basalt-rag
+    digest: "sha256:REPLACE_WITH_APPROVED_PUBLISHED_DIGEST"

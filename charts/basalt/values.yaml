@@ -14,6 +14,8 @@ dashboard:
   image:
     repository: ghcr.io/kingsokafor777-droid/basalt-dashboard
     tag: "0.1.0"
+    # Production must set a published sha256 digest in values-production.yaml.
+    digest: ""
     pullPolicy: IfNotPresent
   containerPort: 3000
   env:
@@ -53,6 +55,8 @@ warehouse:
   image:
     repository: ghcr.io/kingsokafor777-droid/basalt-warehouse
     tag: "0.1.0"
+    # Production must set a published sha256 digest in values-production.yaml.
+    digest: ""
     pullPolicy: IfNotPresent
   command: []
   args: []
@@ -70,6 +74,8 @@ rag:
   image:
     repository: ghcr.io/kingsokafor777-droid/basalt-rag
     tag: "0.1.0"
+    # Production must set a published sha256 digest in values-production.yaml.
+    digest: ""
     pullPolicy: IfNotPresent
   command: []
   args: []
